@@ -26,4 +26,8 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 
+# Virtualenv
 .ve
+
+# MongoDB data
+.mongodb-data
