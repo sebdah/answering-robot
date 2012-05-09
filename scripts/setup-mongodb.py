@@ -30,7 +30,7 @@ def main():
     parser.add_option(  '-d', '--database',
                         action = 'store', type = 'string',
                         dest = 'database', default = '',
-                        help = 'MongoDB port number')
+                        help = 'MongoDB database name')
     options, _ = parser.parse_args()
     
     # Check that the database option was given
