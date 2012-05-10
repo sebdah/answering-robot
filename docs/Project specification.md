@@ -72,7 +72,7 @@ Collection - answers
 
 Collection containing all answers and their questions.
 
-    { 'qs': [ 'q1', 'q2', 'q3' ], 'a': '' }
+    { 'qs': [ 'q1', 'q2', 'q3' ], 'a': 'answer', 't': 'title' }
 
 **Indexes**
 
