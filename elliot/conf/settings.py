@@ -1,0 +1,6 @@
+"""
+Settings
+"""
+
+LANGUAGE = 'en-US'
+
