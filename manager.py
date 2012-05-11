@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 
 """
-Elliot
+Elliot manager
 """
 
 import os
 import sys
 import json
 import optparse
+
+from elliot import question as elliot_question
+from elliot import helpers
 
 try:
     import pymongo
@@ -78,13 +81,38 @@ def import_answer(answer_json, database):
         print "Could not parse given JSON file"
         sys.exit(1)
     
-    for answer in json_data:
-        database['answers'].insert(
-            { 't': answer['title'],
-              'a': answer['answer'],
-              'qs': answer['questions']
-            })
-
+    # Import the answer
+    for answer in json_data:        
+        # Add the answer data to the answers collection
+        answer_doc = database['answers'].insert(
+                        { 't': answer['title'],
+                          'a': answer['answer'],
+                          'qs': answer['questions']
+                        })
+        
+        # Find all keywords in the questions
+        keywords = []
+        for question in answer['questions']:
+            keywords += elliot_question.get_question_characteristics(elliot_question.full_clean(question))['keywords']
+        keywords = helpers.list_make_unique(keywords)
+        
+        # Insert keywords
+        for keyword in keywords:
+            cursor = database['keywords'].find({'k': keyword})
+            if cursor.count() > 0:
+                database['keywords'].update(
+                    {'_id': cursor[0]['_id']},
+                    {
+                        'k': keyword,
+                        'a': helpers.list_make_unique(cursor[0]['a'] + [str(answer_doc)]),
+                    }
+                )
+            else: 
+                database['keywords'].insert(
+                    { 'k': keyword,
+                      'a': [str(answer_doc)]
+                    })
+                    
         print "Imported answer '%s'" % (answer['title'])
     
     print "All done"

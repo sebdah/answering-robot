@@ -53,12 +53,15 @@ def main():
     if 'answers' not in database.collection_names():
         database.create_collection('answers')
     collection = database['answers']
+    collection.ensure_index('a', unique = True)
     
     # Create collection - keywords
     if 'keywords' not in database.collection_names():
         database.create_collection('keywords')
     collection = database['keywords']
-    collection.ensure_index('k')
+    collection.ensure_index('k', unique = True)
+
+    print "Database %s created" % (options.database)
 
 if __name__ == "__main__":
     main()
